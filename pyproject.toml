@@ -1,0 +1,30 @@
+[project]
+name = "transcripter-api"
+version = "0.1.0"
+description = "API for transcribing audio and video files using WhisperX"
+requires-python = ">=3.10"
+authors = [
+    {name = "Your Name"}
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+fastapi = ">=0.109.0"
+python-multipart = ">=0.0.9"
+uvicorn = ">=0.27.0"
+moviepy = ">=1.0.3"
+onnxruntime = ">=1.19.2"
+whisperx = "^3.3.1"
+numpy = ">=2.0"
+ffmpeg = "^1.4"
+ffmpeg-python = "^0.2.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = ">=8.0.0"
+pytest-asyncio = ">=0.23.5"
+httpx = ">=0.26.0"
+pytest-cov = ">=4.1.0"
