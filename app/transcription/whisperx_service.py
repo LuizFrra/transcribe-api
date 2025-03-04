@@ -1,13 +1,19 @@
 from pathlib import Path
 import torch
 import whisperx
+import logging
 from .interface import TranscriptionService
+import torch
 
 class WhisperXService(TranscriptionService):
     def __init__(self, device: str = "cuda" if torch.cuda.is_available() else "cpu", 
                  compute_type: str = "float16" if torch.cuda.is_available() else "int8",
                  batch_size: int = 16,
                  language: str = "en"):
+        self.logger = logging.getLogger(__name__)
+        self.logger.info(f"CUDA available: {torch.cuda.is_available()}")
+        if torch.cuda.is_available():
+            self.logger.info(f"Using CUDA device: {torch.cuda.get_device_name(0)}")
         self.device = device
         self.compute_type = compute_type
         self.batch_size = batch_size
@@ -51,8 +57,9 @@ class WhisperXService(TranscriptionService):
                 text = segment["text"].strip()
                 formatted_output.append(f"[{speaker}] ({start}s-{end}s): {text}")
             
-            print(formatted_output)
+            self.logger.info("Transcription segments: %s", formatted_output)
             return "\n".join(formatted_output)
             
         except Exception as e:
+            self.logger.error("Error during transcription: %s", str(e))
             raise e

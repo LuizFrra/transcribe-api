@@ -91,3 +91,13 @@ poetry run pytest
 ```bash
 poetry run uvicorn app.main:app --reload
 ```
+
+## How to use cuda
+
+1. Install cuda 11.8
+
+2. Download dll from https://github.com/Purfview/whisper-standalone-win/releases/tag/libs
+
+3. Put the downloaded dlls in the bin folder from cuda 
+
+4. Rename the dll cublas64_11.dll to cublas64_12.dll
