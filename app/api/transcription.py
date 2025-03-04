@@ -1,7 +1,7 @@
 import os
 import tempfile
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, List
 
 from fastapi import APIRouter, UploadFile, HTTPException, Depends
 import asyncio
@@ -11,7 +11,7 @@ from app.transcription.handler import TranscriptionHandler
 
 router = APIRouter()
 
-@router.post("/transcribe/", response_model=str)
+@router.post("/transcribe/", response_model=List[dict])
 async def transcribe_file(
     file: UploadFile,
     handler: Annotated[TranscriptionHandler, Depends(get_transcription_handler)]

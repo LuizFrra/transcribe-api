@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import List
 import torch
 import whisperx
 import logging
@@ -23,7 +24,7 @@ class WhisperXService(TranscriptionService):
         self.diarize_model = whisperx.DiarizationPipeline(use_auth_token="", device=self.device)
         self.align_model, self.metadata = whisperx.load_align_model(language_code=self.language, device=self.device)
 
-    async def transcribe_audio(self, audio_path: Path) -> str:
+    async def transcribe_audio(self, audio_path: Path) -> List[dict]:
         """
         Transcribe an audio file to text using WhisperX with diarization.
         
@@ -50,15 +51,18 @@ class WhisperXService(TranscriptionService):
             
             # Format output with speaker labels and timestamps
             formatted_output = []
-            for segment in result["segments"]:
-                speaker = segment.get("speaker", "UNKNOWN")
-                start = round(segment["start"], 2)
-                end = round(segment["end"], 2)
-                text = segment["text"].strip()
-                formatted_output.append(f"[{speaker}] ({start}s-{end}s): {text}")
+            for i, segment in enumerate(result["segments"]):
+                formatted_output.append({
+                    str(i): {
+                        "start": round(segment["start"], 2),
+                        "end": round(segment["end"], 2),
+                        "text": segment["text"].strip(),
+                        "speaker": segment.get("speaker", "UNKNOWN")
+                    }
+                })
             
-            self.logger.info("Transcription segments: %s", formatted_output)
-            return "\n".join(formatted_output)
+            self.logger.info("Transcription done")
+            return formatted_output
             
         except Exception as e:
             self.logger.error("Error during transcription: %s", str(e))
