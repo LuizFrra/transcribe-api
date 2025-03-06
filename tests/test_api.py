@@ -15,7 +15,10 @@ class TestTranscriptionAPI:
             )
         
         assert response.status_code == 200
-        assert response.text == f'"Mocked transcription for test_audio.mp3"'
+        response_data = response.json()
+        assert isinstance(response_data, list)
+        assert len(response_data) == 1
+        assert "Mocked transcription for test_audio.mp3" in response_data[0]["0"]["text"]
     
     def test_transcribe_endpoint_video(self, test_client, test_files_dir):
         """Test transcribing a video file"""
@@ -28,8 +31,10 @@ class TestTranscriptionAPI:
             )
         
         assert response.status_code == 200
-        # The mock service will receive the extracted audio file
-        assert "Mocked transcription for" in response.text
+        response_data = response.json()
+        assert isinstance(response_data, list)
+        assert len(response_data) == 1
+        assert "Mocked transcription for" in response_data[0]["0"]["text"]
     
     def test_transcribe_endpoint_unsupported_format(self, test_client, test_files_dir):
         """Test uploading an unsupported file format"""
@@ -63,8 +68,9 @@ class TestTranscriptionHandler:
             )
             result = await handler.handle_file(upload_file)
         
-        assert isinstance(result, str)
-        assert "Mocked transcription for" in result
+        assert isinstance(result, list)
+        assert len(result) == 1
+        assert "Mocked transcription for" in result[0]["0"]["text"]
     
     async def test_handle_file_video(self, test_files_dir, mock_transcription_service, monkeypatch):
         """Test handling a video file with TranscriptionHandler"""
@@ -85,5 +91,6 @@ class TestTranscriptionHandler:
             )
             result = await handler.handle_file(upload_file)
         
-        assert isinstance(result, str)
-        assert "Mocked transcription for" in result 
+        assert isinstance(result, list)
+        assert len(result) == 1
+        assert "Mocked transcription for" in result[0]["0"]["text"]

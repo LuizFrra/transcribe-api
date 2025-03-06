@@ -19,9 +19,16 @@ class MockVideoFileClip:
         pass
 
 class MockTranscriptionService(TranscriptionService):
-    async def transcribe_audio(self, audio_path: Path) -> str:
-        # Mock implementation that returns a fixed response
-        return f"Mocked transcription for {audio_path.name}"
+    async def transcribe_audio(self, audio_path: Path) -> list:
+        # Mock implementation that returns a list with one segment
+        return [{
+            "0": {
+                "start": 0.0,
+                "end": 1.0,
+                "text": f"Mocked transcription for {audio_path.name}",
+                "speaker": "SPEAKER_01"
+            }
+        }]
 
 @pytest.fixture
 def mock_transcription_service():
@@ -72,4 +79,4 @@ def setup_test_files(test_files_dir):
     # Cleanup (optional, since we might want to keep test files for inspection)
     # for file in test_files_dir.glob("*"):
     #     file.unlink()
-    # test_files_dir.rmdir() 
+    # test_files_dir.rmdir()
