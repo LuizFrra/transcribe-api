@@ -1,3 +1,31 @@
-*__pycache__*
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
+# Ignore coverage files
 .coverage
+
+# Ignore Python version files
 .python-version
+
+# Ignore environment files
+.env
+.env.*
+
+# Ignore VS Code files
+*.code-workspace
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore mypy cache
+.mypy_cache/
+
+# Ignore pytest cache
+.pytest_cache/
+
+# Ignore virtual environment directories
+venv/
+env/
+ENV/
+.venv/
